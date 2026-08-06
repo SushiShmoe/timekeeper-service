@@ -16,6 +16,12 @@ typedef enum {
   TK_MODE_SLAVE = 3,
 } tk_sync_mode_t;
 
+typedef enum{
+	TK_NOERR,
+	TK_ITER_ERR,
+  TK_SEM_ERR,
+} err_timekeeper_t;
+
 #define SYNC_TIMEOUT 10000
 
 #endif

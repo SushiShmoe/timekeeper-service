@@ -84,7 +84,7 @@ endif
 #     this takes options from meson_options.txt (or provided from commandline)
 #     and builds the configuration file based on the .in template
 #     when unused, set common_config_path = ''
-common_config_path = 'common/include/templ'
+common_config_path = 'common/include/timekeeper'
 common_config = configuration_data()
 common_config.set('TEMPLATE_OPTION', get_option('template_option'))
 

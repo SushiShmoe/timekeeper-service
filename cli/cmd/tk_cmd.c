@@ -255,18 +255,20 @@ static int tk_time_sync_req(console_ctx_t *ctx, cmd_signature_t *reg) {
 
   if (flags & STATUS_FLAG_MASK){
     switch (rpl->error){
-      case 0:{
-        console_printf("\tError: No error\n");
-      } break;
-      case 1:{
-        console_printf("\tError: Yes error\n");
-      } break;
-      default :{
-        console_printf("\tError: Wrong error code\n");
-      }break;
+        case TK_NOERR:{
+            console_printf("\tError: No error\n");
+        } break;
+        case TK_ITER_ERR:{
+            console_printf("\tError: Sync failed\n");
+            console_printf("\tLast failed node: %d\n", rpl->last_failed_node);
+        } break;
+        case TK_SEM_ERR:{
+            console_printf("\tError: Semaphore init failed\n");
+        } break;
+        default :{
+            console_printf("\tError: Wrong error code\n");
+        } break;
     }
-
-    console_printf("\tLast failed node: %d\n", rpl->last_failed_node);
 
     time_t timestamp = (time_t)rpl->last_sync;
 

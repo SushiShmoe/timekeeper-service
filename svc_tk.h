@@ -11,11 +11,6 @@
 #include <csp/arch/csp_clock.h>
 #include "pld_tk_plugin.h"
 
-typedef enum{
-	TK_NOERR,
-	TK_ERR,
-} err_timekeeper_t;
-
 int tk_app_get_time(csp_timestamp_t * time);
 
 int tk_app_set_time(const csp_timestamp_t * time);
