@@ -9,7 +9,7 @@
 
 #include <time.h>
 
-#include "tk_defines.h"
+#include "timekeeper/tk_defines.h"
 
 
 // forward declarations of the commands that are to be registered
