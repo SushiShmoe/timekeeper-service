@@ -82,7 +82,8 @@ static int tk_set_time_req(console_ctx_t *ctx, cmd_signature_t *reg) {
       console_printf("\tSet time: invalid time\n");
   } else {
       console_printf(
-          "\tSetting time on node to: %04d-%02d-%02d %02d:%02d:%02d UTC | Raw: %ld\n",
+          "\tSetting time on node %d to: %04d-%02d-%02d %02d:%02d:%02d UTC | Raw: %ld\n",
+          node,
           tm_info->tm_year + 1900,
           tm_info->tm_mon + 1,
           tm_info->tm_mday,
@@ -142,7 +143,8 @@ static int tk_get_time_req(console_ctx_t *ctx, cmd_signature_t *reg) {
       console_printf("\tGet time: invalid time\n");
   } else {
       console_printf(
-          "\tTime on node is: %04d-%02d-%02d %02d:%02d:%02d UTC | Raw: %ld\n",
+          "\tTime on node %d is: %04d-%02d-%02d %02d:%02d:%02d UTC | Raw: %ld\n",
+          node,
           tm_info->tm_year + 1900,
           tm_info->tm_mon + 1,
           tm_info->tm_mday,
