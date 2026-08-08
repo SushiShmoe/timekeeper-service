@@ -6,7 +6,7 @@
  */
 
 
-#include "main.h" // change on integration
+//#include "main.h" // change on integration
 #include "cmsis_os2.h"
 #include "FreeRTOS.h"
 #include "queue.h"
@@ -17,8 +17,10 @@
 #include "timekeeper/server_tk.h" //correct the path in integration (also applies to things lower)
 
 #include <service-csp/csp_pld_txn.h>
-#include <pld_tk_plugin.h> // correct path on integration
 #include "csp/csp_rtable.h"
+
+#include "service/service.h"
+#include "service/service_err_codes.h"
 
 /*
  *
@@ -44,7 +46,6 @@ typedef struct {
  *
  */
 
-osThreadId_t timekeeperTaskHandle;
 const osThreadAttr_t timekeeperTask_attributes = {
     .name = "timekeeperTask",
     .priority = (osPriority_t)osPriorityNormal,
@@ -205,7 +206,7 @@ int tk_app_get_time(csp_timestamp_t * time){
 int tk_app_set_time(const csp_timestamp_t * time){
 	int status = csp_clock_set_time(time);
 
-	return (status == CSP_ERR_NONE) ? TK_NOERR : TK_ERR;
+	return (status == CSP_ERR_NONE) ? TK_NOERR : TK_CSPCLK_ERR;
 }
 
 void tk_app_sync_time(long frequency, uint8_t flags, struct TK_plugin_TK_SYNC_TIME_RSP* rsp){
@@ -301,16 +302,14 @@ void app_init_timekeeper(){
 
 */
 
-service_thread_t top_thread = {
-	.attr = timekeeperTask_attributes,
+service_desc_t service_tk = {
+  .port = 25,//TK_SERVICE_PORT, // TODO on integration
+  .th_top = {
+	.attr = (service_os_thread_attr_t)&timekeeperTask_attributes,
 	.arg = NULL,
 	.func = timekeeper_init,
-	.handle = timekeeperTaskHandle
-};
-
-service_desc_t service_per = {
-  .port = TK_SERVICE_PORT, // TODO on integration
-  .th_top = top_thread,
+	.handle = NULL
+  },
   .th_spawned = SERVICE_THREAD_NONE,
   .log_flag_index = { SERVICE_LOGGING_LEVEL_UNUSED, SERVICE_LOGGING_LEVEL_UNUSED },
   .cb_log_setup = { NULL, NULL },

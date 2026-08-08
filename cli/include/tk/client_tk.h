@@ -9,7 +9,7 @@
 
 #include <stdint.h>
 #include <time.h>
-#include "tk_defines.h"
+#include "timekeeper/tk_defines.h"
 #include "../../common/lpldgen/include/pld_tk_plugin.h"
 
 // the public client C API

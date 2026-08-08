@@ -264,6 +264,9 @@ static int tk_time_sync_req(console_ctx_t *ctx, cmd_signature_t *reg) {
             console_printf("\tError: Sync failed\n");
             console_printf("\tLast failed node: %d\n", rpl->last_failed_node);
         } break;
+        case TK_CSPCLK_ERR:{
+            console_printf("\tError: Csp clock failed setting the time.\n");
+        } break;
         case TK_SEM_ERR:{
             console_printf("\tError: Semaphore init failed\n");
         } break;

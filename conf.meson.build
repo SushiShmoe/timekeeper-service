@@ -1,10 +1,10 @@
 # (0) choose an appropriate name for the component
 project('timekeeper', 'c', 
-  version : '0.2.0.1',
+  version : '0.2.1.0',
   meson_version : '>=0.61.2',
   default_options : [
     'default_library=shared',
-    'optimization=s',
+    'optimization=0',
     'debug=false'])
 project_name = 'timekeeper'
 
@@ -20,35 +20,17 @@ extra_inc_dirs = []
 backend_src = files()
 dep_options = {}
 
+if get_option('enable_csp')
+    component_deps += dependency('csp')
+endif
+
 # (2) create the platform-specific configuration
 if platform == 'Linux'
   # (2.1) set platform-specific backend sources
-  backend_src += files(
-    'lib/sally-backends/fs/posix_backend.c',
-    'lib/sally-backends/os/posix_backend.c',
-    'lib/sally-backends/com/posix_tty_backend.c',
-    'lib/sally-backends/com/memcom_backend.c',
-  )
-
   # (2.2) set the definitions that can be used in code
-  backend_defs += '-DFS_BACKEND=backend_fs_posix'
-  backend_defs += '-DOS_BACKEND=backend_os_posix'
-  backend_defs += '-DCOM_BACKEND=backend_posix_tty'
-
   # (2.3) set the libraries that are needed for this specific platform 
-  component_deps += dependency('threads')
-
   # (2.4) set the platform-specific configuration for dependencies (for example, CSP)
-  if get_option('enable_csp')
-    dep_options += { 
-      'csp': [
-        'csp_platform=posix',
-        'csp_use_ifc_kiss=true',
-        'csp_usart_linux=true',
-        'csp_use_dedup=false',
-      ]
-    }
-  endif
+elif platform == 'stm32h7'
 
 else
   warning('Unknown platform: "' + platform + '", build will likely fail!')
@@ -69,16 +51,10 @@ common_src = files()
 # (3.2) if client commands are to be built, specify the sources here
 if get_option('build_cmdline') != 'none'
   client_cmd_src = files('cli/cmd/tk_cmd.c')
+  component_deps += dependency('console')
 endif
 
 # (3.3) if some autotests are to be built, specify the sources
-if get_option('build_autotest')
-  if get_option('enable_csp')
-    client_bin_src = files('autotest/cli/client_csp.c')
-    server_bin_src = files('autotest/srv/server_csp.c')
-    combined_bin_src = files('autotest/comb/combined_csp.c')
-  endif
-endif
 
 # (4) set the project-specific configuration
 #     this takes options from meson_options.txt (or provided from commandline)
@@ -86,7 +62,7 @@ endif
 #     when unused, set common_config_path = ''
 common_config_path = 'common/include/timekeeper'
 common_config = configuration_data()
-common_config.set('TEMPLATE_OPTION', get_option('template_option'))
+#common_config.set('TK_SERVICE_PORT', get_option('service_port'))
 
 # (5) any miscellanous user configuration should go here
 

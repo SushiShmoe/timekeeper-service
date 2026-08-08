@@ -77,11 +77,17 @@ if class == 'client'
   endif
 
   lib_name += '-cli'
+  if get_option('build_autotest')
+    bin_src += client_bin_src
+  endif
 
 elif class == 'server'
   inc_dirs += 'srv/include'
   lib_src += server_lib_src
   lib_name += '-srv'
+  if get_option('build_autotest')
+    bin_src += server_bin_src
+  endif
 
 endif
 

@@ -19,6 +19,7 @@ typedef enum {
 typedef enum{
 	TK_NOERR,
 	TK_ITER_ERR,
+  TK_CSPCLK_ERR,
   TK_SEM_ERR,
 } err_timekeeper_t;
 

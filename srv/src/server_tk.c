@@ -9,9 +9,9 @@
 #include <service-csp/csp_pld_txn.h>
 
 // lpldgen-generated packet descriptions
-#include <pld_tk_plugin.h>
+#include "../../common/lpldgen/include/pld_tk_plugin.h"
 
-#include "svc_tk.h" // fix import on integration
+#include "../../../../src/services/svc_tk.h" // FIXME fix import on integration
 
 // forward declarations of functions that we will use to do the actual stuff
 static int8_t tk_set_time(void* vreq, void* vrpl);
@@ -20,7 +20,7 @@ static int8_t tk_sync_time(void* vreq, void* vrpl);
 static int8_t tk_sync_slaves(void* vreq, void* vrpl);
 
 
-void server_process_timekeeper_packet(csp_conn_t* conn, csp_packet_t *packet) {
+void server_process_timekeeper_packet(csp_packet_t *packet, csp_conn_t* conn) {
   // based on how the service was set up, it will receive either CSP packets or CSP connections (or both)
   // in this case we ignore conections and just process packets
   (void)conn;

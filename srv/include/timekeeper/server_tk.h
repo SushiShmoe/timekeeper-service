@@ -18,7 +18,7 @@
   NOTE: It is up to the caller to dispose of the packet with csp_buffer_free(packet)!
   \param conn When called, this will point to the opened connection.
 */
-void server_process_timekeeper_packet(csp_conn_t* conn, csp_packet_t *packet);
+void server_process_timekeeper_packet(csp_packet_t *packet, csp_conn_t* conn);
 
 
 #endif
