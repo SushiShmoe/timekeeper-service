@@ -9,7 +9,7 @@
 
 #include <time.h>
 
-#include "tk_defines.h"
+#include "timekeeper/tk_defines.h"
 
 
 // forward declarations of the commands that are to be registered
@@ -82,7 +82,8 @@ static int tk_set_time_req(console_ctx_t *ctx, cmd_signature_t *reg) {
       console_printf("\tSet time: invalid time\n");
   } else {
       console_printf(
-          "\tSetting time on node to: %04d-%02d-%02d %02d:%02d:%02d UTC | Raw: %ld\n",
+          "\tSetting time on node %d to: %04d-%02d-%02d %02d:%02d:%02d UTC | Raw: %ld\n",
+          node,
           tm_info->tm_year + 1900,
           tm_info->tm_mon + 1,
           tm_info->tm_mday,
@@ -142,7 +143,8 @@ static int tk_get_time_req(console_ctx_t *ctx, cmd_signature_t *reg) {
       console_printf("\tGet time: invalid time\n");
   } else {
       console_printf(
-          "\tTime on node is: %04d-%02d-%02d %02d:%02d:%02d UTC | Raw: %ld\n",
+          "\tTime on node %d is: %04d-%02d-%02d %02d:%02d:%02d UTC | Raw: %ld\n",
+          node,
           tm_info->tm_year + 1900,
           tm_info->tm_mon + 1,
           tm_info->tm_mday,
@@ -255,18 +257,23 @@ static int tk_time_sync_req(console_ctx_t *ctx, cmd_signature_t *reg) {
 
   if (flags & STATUS_FLAG_MASK){
     switch (rpl->error){
-      case 0:{
-        console_printf("\tError: No error\n");
-      } break;
-      case 1:{
-        console_printf("\tError: Yes error\n");
-      } break;
-      default :{
-        console_printf("\tError: Wrong error code\n");
-      }break;
+        case TK_NOERR:{
+            console_printf("\tError: No error\n");
+        } break;
+        case TK_ITER_ERR:{
+            console_printf("\tError: Sync failed\n");
+            console_printf("\tLast failed node: %d\n", rpl->last_failed_node);
+        } break;
+        case TK_CSPCLK_ERR:{
+            console_printf("\tError: Csp clock failed setting the time.\n");
+        } break;
+        case TK_SEM_ERR:{
+            console_printf("\tError: Semaphore init failed\n");
+        } break;
+        default :{
+            console_printf("\tError: Wrong error code\n");
+        } break;
     }
-
-    console_printf("\tLast failed node: %d\n", rpl->last_failed_node);
 
     time_t timestamp = (time_t)rpl->last_sync;
 

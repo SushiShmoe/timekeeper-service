@@ -7,7 +7,7 @@
 // lpldgen-generated packet descriptions
 #include <pld_tk_plugin.h>
 
-#include "tk_defines.h"
+#include "timekeeper/tk_defines.h"
 
 #include <time.h>
 
